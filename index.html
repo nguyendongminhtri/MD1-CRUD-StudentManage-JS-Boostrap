@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<h1 style="color: blue; text-align: center" >-------------- CRUD STUDENT MANAGE -----------------</h1>
+<div class="input-group mb-3">
+    <span class="input-group-text" style="color: red" id="validate"></span>
+    <input id="create" type="text" class="form-control" placeholder="Please fill the name Student ...." aria-label="Recipient's username" aria-describedby="basic-addon2">
+    <div class="input-group-append">
+        <span class="input-group-text" id="basic-addon2" onclick="createStudent()">Create</span>
+    </div>
+</div>
+<div class="input-group mb-3">
+    <input onchange="searchStudent()" id="search" type="text" class="form-control" placeholder="Please fill the name Student to Search...." aria-label="Recipient's username" aria-describedby="basic-addon2">
+    <div class="input-group-append">
+        <span class="input-group-text"  onclick="searchStudent()">Search</span>
+    </div>
+</div>
+<table class="table" border="1">
+    <tr class="table-danger">
+        <th>STT</th>
+        <th>NAME</th>
+        <th>DELETE</th>
+        <th>EDIT</th>
+    </tr>
+    <tbody id="veTable">
+<!--    <tr>-->
+<!--        <td>1</td>-->
+<!--        <td>Minh</td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>2</td>-->
+<!--        <td>Long</td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>3</td>-->
+<!--        <td>Hưng</td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td>4</td>-->
+<!--        <td>Nhung</td>-->
+<!--    </tr>-->
+    </tbody>
+</table>
+<script>
+    let studentList = ['Minh', 'Long', 'Hưng', 'Nhung']
+    let searchStudentList = [];
+    function showListStudent() {
+        let veTable = '';
+        for (let i = 0; i < studentList.length; i++) {
+            let j = i + 1;
+            veTable += '<tr class="table-primary">' +
+                '<td>' + j + '</td>' +
+                '<td>' + studentList[i] + '</td>' +
+                '<td>'+'<button onclick="deleteStudent('+i+')" class="btn btn-danger">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-x" viewBox="0 0 16 16">\n' +
+                '  <path d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z"/>\n' +
+                '  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>\n' +
+                '  <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z"/>\n' +
+                '</svg>' +
+                'Delete</button>'+'</td>'+
+                '<td>'+'<button class="btn btn-primary" onclick="updateStudent('+i+')">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">\n' +
+                '  <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>\n' +
+                '</svg>'+
+                'EDIT</button>'+'</td>'+
+                '</tr>'
+        }
+
+        document.getElementById('veTable').innerHTML = veTable;
+    }
+    showListStudent();
+    function createStudent() {
+        let newStudent = document.getElementById('create').value;
+        if(newStudent===''){
+            document.getElementById('validate').innerHTML = 'The name is required! Please try again!'
+            return;
+        } else {
+            studentList.push(newStudent);
+            document.getElementById('validate').innerHTML = 'Create Student success!'
+            showListStudent();
+        }
+    }
+    function deleteStudent(id) {
+        studentList.splice(id,1);
+        alert('Delete Success!')
+        showListStudent();
+    }
+    function updateStudent(id){
+        let newStudent = prompt('Enter the name Studen to edit', studentList[id])
+        studentList[id] = newStudent;
+        showListStudent();
+    }
+    function showListSearch() { //Show List Search
+        let veTable = '';
+        for (let i = 0; i < searchStudentList.length; i++) {
+            let j = i + 1;
+            veTable += '<tr class="table-primary">' +
+                '<td>' + j + '</td>' +
+                '<td>' + searchStudentList[i] + '</td>' +
+                '<td>'+'<button onclick="deleteStudent('+i+')" class="btn btn-danger">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-x" viewBox="0 0 16 16">\n' +
+                '  <path d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z"/>\n' +
+                '  <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z"/>\n' +
+                '  <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z"/>\n' +
+                '</svg>' +
+                'Delete</button>'+'</td>'+
+                '<td>'+'<button class="btn btn-primary" onclick="updateStudent('+i+')">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">\n' +
+                '  <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>\n' +
+                '</svg>'+
+                'EDIT</button>'+'</td>'+
+                '</tr>'
+        }
+
+        document.getElementById('veTable').innerHTML = veTable;
+    }
+    function searchStudent(){ // action khi thực hiện search
+        searchStudentList.splice(0,searchStudentList.length);
+        let search = document.getElementById('search').value;
+        console.log('check -->', search==='')
+        if(search ===''){
+            showListStudent();
+            return;
+        }
+        for (let i = 0; i < studentList.length; i++) {
+            if(search===studentList[i]){
+                searchStudentList.push(studentList[i]);
+            }
+        }
+        console.log('search ===> ', search)
+        showListSearch();
+    }
+</script>
+</body>
+</html>
